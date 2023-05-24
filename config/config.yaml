@@ -1,0 +1,15 @@
+logs:
+  level: "DEBUG"
+  path: "logs.txt"
+mongo:
+  uri: "mongodb://localhost:27017"
+  username: "audit-admin"
+  database: "audit"
+grpc_server:
+  enabled: true
+  port: 50051
+mq:
+  enabled: true
+  username: "rmuser"
+  host: "localhost"
+  port: 5672
