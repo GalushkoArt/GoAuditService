@@ -1,7 +1,7 @@
 package model
 
 import (
-	audit "GoAuditService/pkg/proto"
+	audit "github.com/GalushkoArt/GoAuditService/pkg/proto"
 	"google.golang.org/protobuf/types/known/timestamppb"
 	"time"
 )

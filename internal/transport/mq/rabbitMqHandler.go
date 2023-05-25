@@ -1,13 +1,13 @@
 package mq
 
 import (
-	"GoAuditService/internal/config"
-	"GoAuditService/internal/service"
-	"GoAuditService/internal/utils"
-	"GoAuditService/pkg/model"
-	audit "GoAuditService/pkg/proto"
 	"context"
 	"fmt"
+	"github.com/GalushkoArt/GoAuditService/internal/config"
+	"github.com/GalushkoArt/GoAuditService/internal/service"
+	"github.com/GalushkoArt/GoAuditService/internal/utils"
+	"github.com/GalushkoArt/GoAuditService/pkg/model"
+	audit "github.com/GalushkoArt/GoAuditService/pkg/proto"
 	"github.com/golang/protobuf/proto"
 	amqp "github.com/rabbitmq/amqp091-go"
 	"github.com/rs/zerolog"
@@ -39,7 +39,6 @@ func NewMqConsumer(service service.AuditService, conf config.MqConf) *Consumer {
 }
 
 func (s *Consumer) StartMqConsumer(enabled bool) func() {
-	fmt.Println(enabled)
 	if !enabled {
 		mqLog.Info().Msg("MQ consumer disabled")
 		return func() {}

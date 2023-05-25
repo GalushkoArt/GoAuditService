@@ -1,10 +1,10 @@
 package gRPC
 
 import (
-	"GoAuditService/internal/service"
-	"GoAuditService/internal/utils"
-	audit "GoAuditService/pkg/proto"
 	"fmt"
+	"github.com/GalushkoArt/GoAuditService/internal/service"
+	"github.com/GalushkoArt/GoAuditService/internal/utils"
+	audit "github.com/GalushkoArt/GoAuditService/pkg/proto"
 	"github.com/rs/zerolog"
 	"github.com/rs/zerolog/log"
 	"google.golang.org/grpc"

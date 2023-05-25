@@ -1,14 +1,13 @@
 package main
 
 import (
-	"GoAuditService/internal/config"
-	"GoAuditService/internal/logs"
-	"GoAuditService/internal/repository"
-	"GoAuditService/internal/transport/gRPC"
-	"GoAuditService/internal/transport/mq"
-	"GoAuditService/internal/utils"
 	"context"
-	"fmt"
+	"github.com/GalushkoArt/GoAuditService/internal/config"
+	"github.com/GalushkoArt/GoAuditService/internal/logs"
+	"github.com/GalushkoArt/GoAuditService/internal/repository"
+	"github.com/GalushkoArt/GoAuditService/internal/transport/gRPC"
+	"github.com/GalushkoArt/GoAuditService/internal/transport/mq"
+	"github.com/GalushkoArt/GoAuditService/internal/utils"
 	"github.com/rs/zerolog/log"
 	"go.mongodb.org/mongo-driver/mongo"
 	"go.mongodb.org/mongo-driver/mongo/options"
@@ -44,7 +43,7 @@ func main() {
 
 	exit := make(chan os.Signal, 1)
 	signal.Notify(exit, os.Interrupt, os.Kill)
-	fmt.Println(<-exit)
+	<-exit
 
 	done := make(chan bool)
 	finishWG := sync.WaitGroup{}
