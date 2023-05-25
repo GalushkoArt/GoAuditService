@@ -1,4 +1,4 @@
-module GoAuditService
+module github.com/GalushkoArt/GoAuditService
 
 go 1.20
 
