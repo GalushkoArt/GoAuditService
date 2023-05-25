@@ -1,8 +1,8 @@
 package gRPC
 
 import (
-	audit "GoAuditService/pkg/proto"
 	"context"
+	audit "github.com/GalushkoArt/GoAuditService/pkg/proto"
 	"github.com/rs/zerolog/log"
 	"google.golang.org/grpc"
 	"time"

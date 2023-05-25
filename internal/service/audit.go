@@ -1,8 +1,8 @@
 package service
 
 import (
-	"GoAuditService/pkg/model"
 	"context"
+	"github.com/GalushkoArt/GoAuditService/pkg/model"
 )
 
 type AuditService interface {

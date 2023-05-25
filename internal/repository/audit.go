@@ -1,8 +1,8 @@
 package repository
 
 import (
-	"GoAuditService/pkg/model"
 	"context"
+	"github.com/GalushkoArt/GoAuditService/pkg/model"
 	"github.com/rs/zerolog/log"
 	"go.mongodb.org/mongo-driver/mongo"
 )
