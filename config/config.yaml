@@ -10,6 +10,7 @@ grpc_server:
   port: 50051
 mq:
   enabled: true
+  concurrency: 10
   username: "rmuser"
   host: "localhost"
   port: 5672

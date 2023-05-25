@@ -8,7 +8,9 @@ import (
 	"github.com/rs/zerolog"
 	"github.com/rs/zerolog/log"
 	"google.golang.org/grpc"
+	"google.golang.org/grpc/keepalive"
 	"net"
+	"time"
 )
 
 type Server struct {
@@ -29,8 +31,18 @@ func StartGRPC(enabled bool, auditService service.AuditService, port int) func()
 }
 
 func New(service service.AuditService) *Server {
+	kaep := keepalive.EnforcementPolicy{
+		MinTime:             10 * time.Second,
+		PermitWithoutStream: true,
+	}
+	kasp := keepalive.ServerParameters{
+		Time:    5 * time.Minute,
+		Timeout: 5 * time.Minute,
+	}
 	return &Server{
 		grpcSrv: grpc.NewServer(
+			grpc.KeepaliveEnforcementPolicy(kaep),
+			grpc.KeepaliveParams(kasp),
 			grpc.UnaryInterceptor(requestLogger),
 		),
 		auditServer: newAuditHandler(service),

@@ -12,16 +12,16 @@ import (
 	amqp "github.com/rabbitmq/amqp091-go"
 	"github.com/rs/zerolog"
 	"github.com/rs/zerolog/log"
-	"sync"
 )
 
 type Consumer struct {
-	service   service.AuditService
-	user      string
-	password  string
-	host      string
-	port      int
-	queueName string
+	service     service.AuditService
+	user        string
+	password    string
+	host        string
+	port        int
+	queueName   string
+	concurrency int
 }
 
 var mqLog zerolog.Logger
@@ -29,12 +29,13 @@ var mqLog zerolog.Logger
 func NewMqConsumer(service service.AuditService, conf config.MqConf) *Consumer {
 	mqLog = log.With().Str("from", "mqConsumer").Logger()
 	return &Consumer{
-		service:   service,
-		user:      conf.User,
-		password:  conf.Password,
-		host:      conf.Host,
-		port:      conf.Port,
-		queueName: conf.QueueName,
+		service:     service,
+		user:        conf.User,
+		password:    conf.Password,
+		host:        conf.Host,
+		port:        conf.Port,
+		queueName:   conf.QueueName,
+		concurrency: conf.Concurrency,
 	}
 }
 
@@ -69,40 +70,56 @@ func (s *Consumer) StartMqConsumer(enabled bool) func() {
 	)
 	utils.PanicOnError(err, "Failed to register a consumer")
 
-	ctx := context.Background()
-	wg := &sync.WaitGroup{}
-
-	go func() {
-		for msg := range msgs {
-			wg.Add(1)
-			auditRequest := &audit.LogRequest{}
-			err = proto.Unmarshal(msg.Body, auditRequest)
-			if err != nil {
-				mqLog.Error().Err(err).Msg("Fail unmarshal")
-				utils.PanicOnError(msg.Nack(false, false))
-				wg.Done()
-				continue
+	ctx, cancel := context.WithCancel(context.Background())
+	done := make(chan bool)
+	for i := 0; i < s.concurrency; i++ {
+		go func() {
+			defer func() {
+				done <- true
+			}()
+			for {
+				select {
+				case <-ctx.Done():
+					return
+				case msg, ok := <-msgs:
+					if !ok {
+						return
+					}
+					s.processMessage(msg)
+				}
 			}
-			mqLog.Debug().Msgf("Received msg: %v", auditRequest)
-			err = s.service.Insert(ctx, model.LogRequestToItem(auditRequest))
-			if err != nil {
-				mqLog.Error().Err(err).Msgf("Fail to insert log")
-				utils.PanicOnError(msg.Nack(false, false))
-				wg.Done()
-				continue
-			}
-			err = msg.Ack(false)
-			if err != nil {
-				mqLog.Error().Err(err).Msg("Fail to ack")
-			}
-			wg.Done()
-		}
-	}()
+		}()
+	}
 
 	mqLog.Info().Msg("MQ consumer started successfully")
 	return func() {
+		cancel()
+		for i := 0; i < s.concurrency; i++ {
+			<-done
+		}
+		close(done)
 		utils.PanicOnError(ch.Close())
 		utils.PanicOnError(conn.Close())
-		wg.Wait()
+	}
+}
+
+func (s *Consumer) processMessage(msg amqp.Delivery) {
+	auditRequest := &audit.LogRequest{}
+	err := proto.Unmarshal(msg.Body, auditRequest)
+	if err != nil {
+		mqLog.Error().Err(err).Msg("Fail unmarshal")
+		utils.PanicOnError(msg.Nack(false, false))
+		return
+	}
+	mqLog.Debug().Msgf("Received msg: %v", auditRequest)
+	err = s.service.Insert(context.Background(), model.LogRequestToItem(auditRequest))
+	if err != nil {
+		mqLog.Error().Err(err).Msgf("Fail to insert log")
+		utils.PanicOnError(msg.Nack(false, false))
+		return
+	}
+	err = msg.Ack(false)
+	if err != nil {
+		mqLog.Error().Err(err).Msg("Fail to ack")
 	}
 }

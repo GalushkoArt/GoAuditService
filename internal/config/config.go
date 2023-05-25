@@ -26,12 +26,13 @@ type Config struct {
 }
 
 type MqConf struct {
-	Enabled   bool   `yaml:"enabled" env:"MQ_ENABLED" env-default:"false"`
-	User      string `yaml:"username" env:"MQ_USERNAME" env-default:"rmuser"`
-	Password  string `yaml:"password" env:"MQ_PASSWORD"`
-	Host      string `yaml:"host" env:"MQ_HOST" env-default:"localhosta"`
-	Port      int    `yaml:"port" env:"MQ_PORT" env-default:"5672"`
-	QueueName string `yaml:"queue_name" env:"MQ_QUEUE_NAME" env-default:"audit"`
+	Enabled     bool   `yaml:"enabled" env:"MQ_ENABLED" env-default:"false"`
+	Concurrency int    `yaml:"concurrency" env:"MQ_CONCURRENCY" env-default:"10"`
+	User        string `yaml:"username" env:"MQ_USERNAME" env-default:"rmuser"`
+	Password    string `yaml:"password" env:"MQ_PASSWORD"`
+	Host        string `yaml:"host" env:"MQ_HOST" env-default:"localhosta"`
+	Port        int    `yaml:"port" env:"MQ_PORT" env-default:"5672"`
+	QueueName   string `yaml:"queue_name" env:"MQ_QUEUE_NAME" env-default:"audit"`
 }
 
 var Conf Config
