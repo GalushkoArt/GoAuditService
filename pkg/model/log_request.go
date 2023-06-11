@@ -1,7 +1,7 @@
 package model
 
 import (
-	audit "github.com/GalushkoArt/GoAuditService/pkg/proto"
+	audit "github.com/galushkoart/go-audit-service/pkg/proto"
 	"google.golang.org/protobuf/types/known/timestamppb"
 	"time"
 )
@@ -53,14 +53,14 @@ var (
 )
 
 type LogItem struct {
-	Action    Actions   `bson:"action"`
-	Entity    Entities  `bson:"entity"`
-	EntityID  string    `bson:"entityID"`
-	Timestamp time.Time `bson:"timestamp"`
+	Action    Actions
+	Entity    Entities
+	EntityID  string `bson:"entity_id"`
+	Timestamp time.Time
 }
 
-func LogRequestToItem(request *audit.LogRequest) LogItem {
-	return LogItem{
+func LogRequestToItem(request *audit.LogRequest) *LogItem {
+	return &LogItem{
 		Action:    requestActionsToItem[request.Action],
 		Entity:    requestEntityToItem[request.Entity],
 		EntityID:  request.EntityId,
@@ -68,8 +68,8 @@ func LogRequestToItem(request *audit.LogRequest) LogItem {
 	}
 }
 
-func LogItemToLogRequest(item *LogItem) audit.LogRequest {
-	return audit.LogRequest{
+func LogItemToLogRequest(item *LogItem) *audit.LogRequest {
+	return &audit.LogRequest{
 		Action:    itemActionsToRequest[item.Action],
 		Entity:    itemEntityToRequest[item.Entity],
 		EntityId:  item.EntityID,

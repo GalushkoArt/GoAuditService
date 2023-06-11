@@ -2,9 +2,9 @@ package service
 
 import (
 	"context"
-	"github.com/GalushkoArt/GoAuditService/pkg/model"
+	"github.com/galushkoart/go-audit-service/pkg/model"
 )
 
 type AuditService interface {
-	Insert(ctx context.Context, item model.LogItem) error
+	Insert(ctx context.Context, item *model.LogItem) error
 }

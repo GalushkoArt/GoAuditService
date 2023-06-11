@@ -2,13 +2,13 @@ package repository
 
 import (
 	"context"
-	"github.com/GalushkoArt/GoAuditService/pkg/model"
+	"github.com/galushkoart/go-audit-service/pkg/model"
 	"github.com/rs/zerolog/log"
 	"go.mongodb.org/mongo-driver/mongo"
 )
 
 type AuditRepository interface {
-	Insert(ctx context.Context, item model.LogItem) error
+	Insert(ctx context.Context, item *model.LogItem) error
 }
 
 type auditRepository struct {
@@ -21,8 +21,8 @@ func NewAuditRepository(db *mongo.Database) AuditRepository {
 	}
 }
 
-func (r *auditRepository) Insert(ctx context.Context, item model.LogItem) error {
-	log.Debug().Str("from", "auditRepository").Msgf("Inserting %v", item)
-	_, err := r.db.Collection("logs").InsertOne(ctx, item)
+func (r *auditRepository) Insert(ctx context.Context, item *model.LogItem) error {
+	res, err := r.db.Collection("logs").InsertOne(ctx, &item)
+	log.Debug().Str("from", "auditRepository").Interface("result", res).Msg("Insert result")
 	return err
 }

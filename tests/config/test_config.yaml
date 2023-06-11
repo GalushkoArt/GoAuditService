@@ -1,0 +1,7 @@
+mongo:
+  version: "6.0.6"
+grpc_server:
+  port: 50051
+mq:
+  implementation: "rabbitmq"
+  version: "3.11.16"
