@@ -1,10 +1,10 @@
-package gRPC
+package grpcs
 
 import (
 	"context"
-	"github.com/GalushkoArt/GoAuditService/internal/service"
-	"github.com/GalushkoArt/GoAuditService/pkg/model"
-	audit "github.com/GalushkoArt/GoAuditService/pkg/proto"
+	"github.com/galushkoart/go-audit-service/internal/service"
+	"github.com/galushkoart/go-audit-service/pkg/model"
+	audit "github.com/galushkoart/go-audit-service/pkg/proto"
 	"github.com/rs/zerolog/log"
 	"google.golang.org/grpc/codes"
 	"google.golang.org/grpc/status"

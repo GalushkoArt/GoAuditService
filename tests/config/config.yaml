@@ -1,0 +1,15 @@
+logs:
+  level: "DEBUG"
+  path: ""
+mongo:
+  username: ""
+  password: ""
+  database: "audit"
+grpc_server:
+  enabled: true
+  port: 50051
+mq:
+  enabled: true
+  concurrency: 10
+  username: "guest"
+  password: "guest"

@@ -10,7 +10,7 @@ import (
 type Config struct {
 	Mongo struct {
 		URI      string `yaml:"uri" env:"MONGO_URI" env-default:"mongodb://localhost:27017"`
-		Username string `yaml:"username" env:"MONGO_USERNAME" env-default:"audit-admin"`
+		Username string `yaml:"username" env:"MONGO_USERNAME"`
 		Password string `yaml:"password" env:"MONGO_PASSWORD"`
 		Database string `yaml:"database" env:"MONGO_DATABASE" env-default:"audit"`
 	} `yaml:"mongo"`
@@ -30,7 +30,7 @@ type MqConf struct {
 	Concurrency int    `yaml:"concurrency" env:"MQ_CONCURRENCY" env-default:"10"`
 	User        string `yaml:"username" env:"MQ_USERNAME" env-default:"rmuser"`
 	Password    string `yaml:"password" env:"MQ_PASSWORD"`
-	Host        string `yaml:"host" env:"MQ_HOST" env-default:"localhosta"`
+	Host        string `yaml:"host" env:"MQ_HOST" env-default:"localhost"`
 	Port        int    `yaml:"port" env:"MQ_PORT" env-default:"5672"`
 	QueueName   string `yaml:"queue_name" env:"MQ_QUEUE_NAME" env-default:"audit"`
 }
